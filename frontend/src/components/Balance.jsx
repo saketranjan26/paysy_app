@@ -6,7 +6,7 @@ export const Balance = () => {
 
     useEffect(()=>{
         axios
-        .get("http://localhost:3007/api/v1/account/balance",{
+        .get("https://paysy-app.onrender.com/api/v1/account/balance",{
             headers:{
                 Authorization: "Bearer " + localStorage.getItem("token")
             }
