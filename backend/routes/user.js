@@ -60,6 +60,7 @@ router.post("/signup", async (req, res) => {
   res.json({
     msg: "User created successfully",
     token: token,
+    ID: userId
   });
 });
 

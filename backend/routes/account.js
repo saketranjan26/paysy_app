@@ -1,6 +1,7 @@
 const express = require("express");
 const { authMiddleware } = require("../middleware");
 const { Account } = require("../db");
+const { default: mongoose } = require('mongoose');
 
 const router = express.Router();
 
@@ -21,7 +22,11 @@ router.post("/transfer", authMiddleware, async (req, res) => {
   const { amount, to } = req.body;
 
   if (!amount || !to) {
-    throw new Error("Amount and to fields are required.");
+    await session.abortTransaction();
+    res.json({
+      message:"Enter the amount"
+    }) 
+    return res.status(400)
   }
 
   // Fetch the accounts within the transaction
@@ -31,9 +36,10 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 
   if (!account || account.balance < amount) {
     await session.abortTransaction();
-    return res.status(400).json({
+    res.json({
       message: "Insufficient balance",
     });
+    return res.status(400)
   }
 
   const toAccount = await Account.findOne({ userId: to }).session(session);
